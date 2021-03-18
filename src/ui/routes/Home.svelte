@@ -10,6 +10,19 @@
 	import Youtube from '../components/Youtube.svelte';
 
 	const toastsW: Writable<ToastItem[]> = writable([]);
+	const BODY_ADDER_EASTER_EGG = {
+		20: 'i feel like you\'d like cookie clicker',
+		50: 'to make myself clear, i do not have cookies',
+		69: 'hehe nice, 69th click',
+		100: 'bro, instead of clicking on me, you needa be clicking with some bitches...',
+		200: 'okay at this point you\'re probably digging for the treasure, that i may or may not have...',
+		300: 'i could give you a coupon code or something if you keep clicking, it\'s only your fingers that you\'re sacrificing!',
+		400: 'what the fuck why are you still going, i didn\'t even know my shitty code could handle so many!',
+		500: 'bro, stop, seriously, i\'ve run out of quirky lines!',
+		1000: 'fuck you.',
+		6969: 'hey you! yeah you, the one that\'s looking through my code! you\'re lucky i couldn\'t be arsed to obfuscate my easter eggs... or could i?',
+		6970: 'unless you\'re on github... in that case follow me lmao',
+	};
 
 	let button: Button;
 	let matter: Matter;
@@ -21,6 +34,8 @@
 	export let buttonURL = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=N38QJE62JSAJY';
 	export let heading = '';
 	export let string = '';
+
+	let bodiesAdded = 0;
 </script>
 
 
@@ -60,6 +75,15 @@
 			<Logo
 				on:click={() => {
 					matter.addNewBody();
+
+					++bodiesAdded;
+
+					// @ts-expect-error
+					if (BODY_ADDER_EASTER_EGG[bodiesAdded] != null) {
+						// @ts-expect-error
+						// eslint-disable-next-line no-alert
+						alert(BODY_ADDER_EASTER_EGG[bodiesAdded]);
+					}
 				}}
 			/>
 		</container>
