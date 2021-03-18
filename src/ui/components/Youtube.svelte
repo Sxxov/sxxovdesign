@@ -42,10 +42,6 @@
 		onResize();
 	});
 
-	onDestroy(() => {
-		player.destroy();
-	});
-
 	function onPlayerStateChange(event: YT.OnStateChangeEvent) {
 		switch (event.data) {
 			case YT.PlayerState.PLAYING:
@@ -81,6 +77,10 @@
 	}
 
 	function onResize() {
+		if (!component) {
+			return;
+		}
+	
 		if (WindowUtility.inner.width > WindowUtility.inner.height * 16 / 9) {
 			component.style.width = `${WindowUtility.inner.width}px`;
 			component.style.height = `${WindowUtility.inner.width * 9 / 16}px`;
