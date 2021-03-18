@@ -1,7 +1,5 @@
-import strings from '../strings';
-
 export class ClientError extends Error {
-	constructor(message: string = strings.common.errors.NO_MESSAGE_PROVIDED) {
+	constructor(message = 'No message provided, an error with errors?') {
 		super(message);
 		this.name = this.constructor.name;
 		(Error as any).captureStackTrace?.(this, this.constructor);
