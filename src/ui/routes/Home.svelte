@@ -110,6 +110,7 @@
 	}
 
 	container.logo {
+		width: min-content;
 		pointer-events: all;
 	}
 
