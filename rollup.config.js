@@ -66,9 +66,19 @@ export default (commandLineArgs) => [
 			}),
 
 			copy({
-				assets: production
-					? ['index.html', 'resources/raw']
-					: ['resources/raw'],
+				assets: [
+					// common assets
+					'resources/raw',
+
+					...(production
+						// prod-only assets
+						? [
+							'index.html',
+							'_redirects',
+						]
+						// dev-only assets
+						: []),
+				],
 			}),
 
 			json({
