@@ -1,5 +1,6 @@
 <script lang='ts'>
 	import { Router, Route } from 'svelte-routing';
+	import { GoogleAnalytics } from '@beyonk/svelte-google-analytics';
 	import Failure from './ui/routes/Failure.svelte';
 	import Home from './ui/routes/Home.svelte';
 	import Success from './ui/routes/Success.svelte';
@@ -21,6 +22,8 @@
 		/>
 	</Router>
 </main>
+
+<GoogleAnalytics properties={['G-K194LSP00P']} />
 
 <style>
 	main {
