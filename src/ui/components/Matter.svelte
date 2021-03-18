@@ -212,16 +212,24 @@
 			buttonDomContent.style.top = '0px';
 			buttonDomContent.style.zIndex = '-1';
 
+			let framesOutOfBound = 0;
+
 			// start moving the button to its correct spot
 			requestAnimationFrame(function raf() {
-				if (buttonBody.position.x < -(WALL_THICKNESS / 2)
-					|| buttonBody.position.y < -(WALL_THICKNESS / 2)
-					|| buttonBody.position.x > WindowUtility.inner.width + (WALL_THICKNESS / 2)
-					|| buttonBody.position.y > WindowUtility.inner.height + (WALL_THICKNESS / 2)) {
+				if (++framesOutOfBound > 60
+					&& (buttonBody.position.x < -(buttonDomContent.offsetHeight / 2)
+					|| buttonBody.position.y < -(buttonDomContent.offsetHeight / 2)
+					|| buttonBody.position.x > WindowUtility.inner.width + (buttonDomContent.offsetHeight / 2)
+					|| buttonBody.position.y > WindowUtility.inner.height + (buttonDomContent.offsetHeight / 2))) {
+					// stop mouse hold
+					mouse.button = -1;
+
 					// eslint-disable-next-line no-alert
 					alert('you had one job.');
 
-					Body.setPosition(buttonBody, Vector.create(width / 2, WALL_THICKNESS));
+					Body.setPosition(buttonBody, Vector.create(width / 2, height / 2));
+
+					framesOutOfBound = 0;
 				}
 	
 				applyButtonTransformationsFromBody(buttonDomContent, buttonBody);
