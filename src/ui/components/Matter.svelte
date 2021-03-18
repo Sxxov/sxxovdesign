@@ -212,15 +212,20 @@
 			buttonDomContent.style.top = '0px';
 			buttonDomContent.style.zIndex = '-1';
 
-			let framesOutOfBound = 0;
+			let consecutiveFramesOutOfBound = 0;
 
 			// start moving the button to its correct spot
 			requestAnimationFrame(function raf() {
-				if (++framesOutOfBound > 60
-					&& (buttonBody.position.x < -(buttonDomContent.offsetHeight / 2)
-					|| buttonBody.position.y < -(buttonDomContent.offsetHeight / 2)
-					|| buttonBody.position.x > WindowUtility.inner.width + (buttonDomContent.offsetHeight / 2)
-					|| buttonBody.position.y > WindowUtility.inner.height + (buttonDomContent.offsetHeight / 2))) {
+				if (Math.floor(buttonBody.position.x) < -(buttonDomContent.offsetHeight / 2)
+					|| Math.floor(buttonBody.position.y) <= -(buttonDomContent.offsetHeight / 2)
+					|| Math.floor(buttonBody.position.x) >= WindowUtility.inner.width + (buttonDomContent.offsetHeight / 2)
+					|| Math.floor(buttonBody.position.y) >= WindowUtility.inner.height + (buttonDomContent.offsetHeight / 2)) {
+					++consecutiveFramesOutOfBound;
+				} else {
+					consecutiveFramesOutOfBound = 0;
+				}
+
+				if (consecutiveFramesOutOfBound > 10) {
 					// stop mouse hold
 					mouse.button = -1;
 
@@ -229,7 +234,7 @@
 
 					Body.setPosition(buttonBody, Vector.create(width / 2, height / 2));
 
-					framesOutOfBound = 0;
+					consecutiveFramesOutOfBound = 0;
 				}
 	
 				applyButtonTransformationsFromBody(buttonDomContent, buttonBody);
