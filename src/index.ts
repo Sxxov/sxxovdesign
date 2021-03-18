@@ -1,16 +1,19 @@
-import App from "./App.svelte";
+import App from './App.svelte';
+import './index.css';
 
-var app = new App({
-  target: document.body,
+document.documentElement.classList.add('theme:dark');
+
+const app = new App({
+	target: document.body,
 });
 
 export default app;
 
 // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
 // Learn more: https://www.snowpack.dev/concepts/hot-module-replacement
-if (import.meta.hot) {
-	import.meta.hot.accept();
-	import.meta.hot.dispose(() => {
+if ((import.meta as any).hot) {
+	(import.meta as any).hot.accept();
+	(import.meta as any).hot.dispose(() => {
 		app.$destroy();
 	});
 }

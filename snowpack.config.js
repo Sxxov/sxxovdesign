@@ -5,18 +5,19 @@ module.exports = {
 		src: { url: '/dist' },
 	},
 	plugins: [
+		'@snowpack/plugin-postcss',
 		'@snowpack/plugin-svelte',
 		'@snowpack/plugin-dotenv',
 		'@snowpack/plugin-typescript',
 	],
 	routes: [
 		/* Enable an SPA Fallback in development: */
-		{"match": "routes", "src": ".*", "dest": "/index.html"},
+		{ match: 'routes', src: '.*', dest: '/index.html' },
 	],
 	optimize: {
-		bundle: true,
-		minify: true,
-		target: 'es2018',
+		// bundle: true,
+		// minify: true,
+		// target: 'es2018',
 	},
 	packageOptions: {
 		/* ... */

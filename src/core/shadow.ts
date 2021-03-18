@@ -1,4 +1,4 @@
-import { UnexpectedValueError } from '../resources/errors';
+import { UnexpectedValueError } from '../resources/errors/unexpectedValue.error';
 
 export class Shadow {
 	public static apply(depth: number, node: HTMLElement): void {

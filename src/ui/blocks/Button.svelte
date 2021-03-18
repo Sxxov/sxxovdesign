@@ -6,8 +6,8 @@
 	import { writable } from 'svelte/store';
 	import { Shadow } from '../../core/shadow';
 	import Ripple from './Ripple.svelte';
-	import { CSSUtility } from '../../resources/utilities';
-	import type { CSS } from '../../resources/utilities';
+	import { CSSUtility } from '../../resources/utilities/css.utility';
+	import type { CSS } from '../../resources/utilities/css.utility';
 
 	export let backgroundColour: CSS = '--colour-accent-primary';
 	export let hoverColour: CSS = '--colour-accent-secondary';
@@ -22,13 +22,19 @@
 	export let isText = true;
 	export let textAlign: CSS = 'center';
 	export let padding: CSS = '16px max(var(--border-radius), 24px)';
-	export let isFocusedWritable = writable(false);
+	export let isFocusedW = writable(false);
 	export let isDisabled = false;
-	export let isDisabledWritable = writable(isDisabled);
+	export let isDisabledW = writable(isDisabled);
 	export let isAnimated = true;
-	export let isAnimatedWritable = writable(isAnimated);
+	export let isAnimatedW = writable(isAnimated);
+	export let transition = '0.2s var(--ease-slow-slow)';
+	export let transitionW = writable(transition);
 	export let isTextInvertedAgainstBackground = false;
-	export let isTextInvertedAgainstBackgroundWritable = writable(isTextInvertedAgainstBackground);
+	export let isTextInvertedAgainstBackgroundW = writable(isTextInvertedAgainstBackground);
+	export let isHovered = false;
+	export let isHoveredW = writable(isHovered);
+	export const getComponentDomContent = () => componentDomContent;
+	export const getButtonDomContent = () => buttonDomContent;
 
 	const speed = 1000;
 	const sizeIn = 20;
@@ -36,12 +42,16 @@
 	const dispatch = createEventDispatcher();
 
 	const ripples = (() => {
-		const arrayWritable = writable<any[]>([]);
+		const arrayW = writable<any[]>([]);
 
 		return {
-			...arrayWritable,
-			add: (item: any) => arrayWritable.update((items) => [...items, item]),
-			clear: () => arrayWritable.update(() => []),
+			...arrayW,
+			add: (item: any) => {
+				arrayW.update((items) => [...items, item]);
+			},
+			clear: () => {
+				arrayW.update(() => []);
+			},
 		};
 	})();
 
@@ -54,16 +64,16 @@
 		y: number;
 	} = {
 		get width() {
-			return +!!buttonDomContent && buttonDomContent.offsetWidth;
+			return Number(Boolean(buttonDomContent)) && buttonDomContent.offsetWidth;
 		},
 		get height() {
-			return +!!buttonDomContent && buttonDomContent.offsetHeight;
+			return Number(Boolean(buttonDomContent)) && buttonDomContent.offsetHeight;
 		},
 		get x() {
-			return +!!buttonDomContent && buttonDomContent.getBoundingClientRect().x;
+			return Number(Boolean(buttonDomContent)) && buttonDomContent.getBoundingClientRect().x;
 		},
 		get y() {
-			return +!!buttonDomContent && buttonDomContent.getBoundingClientRect().y;
+			return Number(Boolean(buttonDomContent)) && buttonDomContent.getBoundingClientRect().y;
 		},
 	};
 
@@ -86,7 +96,7 @@
 	let isTouched = false;
 	let timeoutHandle: ReturnType<typeof setTimeout>;
 
-	function onMouseDown(event: MouseEvent | TouchEvent, type: string) {
+	export function onMouseDown(event: MouseEvent | TouchEvent, type: string) {
 		switch (type) {
 			case 'touch': {
 				isTouched = true;
@@ -98,6 +108,7 @@
 	
 				break;
 			}
+
 			case 'click': {
 				if (isTouched) {
 					isTouched = false;
@@ -113,6 +124,7 @@
 
 				break;
 			}
+
 			default:
 		}
 
@@ -132,7 +144,7 @@
 			.remove('unpressed');
 	}
 
-	function onMouseUp(event: MouseEvent | TouchEvent) {
+	export function onMouseUp(event: MouseEvent | TouchEvent) {
 		if (!event.currentTarget) {
 			return;
 		}
@@ -143,10 +155,22 @@
 			?.classList
 			.remove('unpressed');
 	}
+
+	export function onMouseOver() {
+		isHoveredW.set(true);
+	}
+
+	export function onMouseOut() {
+		isHoveredW.set(false);
+	}
+
+	export function onClick() {
+		dispatch('click');
+	}
 </script>
 
 <component
-	class:unpressed={!$isFocusedWritable}
+	class:unpressed={!$isFocusedW}
 	bind:this={componentDomContent}
 	style='
 		--width: {CSSUtility.parse(width)};
@@ -161,25 +185,46 @@
 	</container>
 	<button
 		bind:this={buttonDomContent}
+		class:hover={$isHoveredW}
 		style='
 			--colour-background: {CSSUtility.parse(backgroundColour)};
-			--colour-hover: {CSSUtility.parse($isAnimatedWritable ? hoverColour : backgroundColour)};
+			--colour-hover: {CSSUtility.parse($isAnimatedW ? hoverColour : backgroundColour)};
 			--colour-ripple: {CSSUtility.parse(rippleColour)};
-			--colour-text: {CSSUtility.parse($isTextInvertedAgainstBackgroundWritable ? 'white' : textColour)};
+			--colour-text: {CSSUtility.parse($isTextInvertedAgainstBackgroundW ? 'white' : textColour)};
 			--button-padding: {CSSUtility.parse(padding)};
 			--icon-size: {CSSUtility.parse(iconSize)};
 			--text-align: {textAlign};
-			--transition: {$isAnimatedWritable ? '0.2s var(--ease-slow-slow)' : 'unset'};
-			--mix-blend-mode: {$isTextInvertedAgainstBackgroundWritable ? 'difference' : 'unset'};
+			--transition: {$isAnimatedW ? $transitionW : 'unset'};
+			--mix-blend-mode: {$isTextInvertedAgainstBackgroundW ? 'difference' : 'unset'};
 		'
-		on:click={() => dispatch('click')}
-		on:focus={() => isFocusedWritable.set(true)}
-		on:blur={() => isFocusedWritable.set(false)}
-		on:touchstart|passive={(event) => onMouseDown(event, 'touch')}  
-		on:mousedown={(event) => onMouseDown(event, 'click')}
-		on:touchend|passive={(event) => onMouseUp(event)}
-		on:mouseup={(event) => onMouseUp(event)}
-		disabled={$isDisabledWritable}
+		on:click={() => {
+			onClick();
+		}}
+		on:focus={() => {
+			isFocusedW.set(true);
+		}}
+		on:blur={() => {
+			isFocusedW.set(false);
+		}}
+		on:touchstart|passive={(event) => {
+			onMouseDown(event, 'touch');
+		}}  
+		on:mousedown={(event) => {
+			onMouseDown(event, 'click');
+		}}
+		on:touchend|passive={(event) => {
+			onMouseUp(event);
+		}}
+		on:mouseup={(event) => {
+			onMouseUp(event);
+		}}
+		on:mouseover={() => {
+			onMouseOver();
+		}}
+		on:mouseout={() => {
+			onMouseOut();
+		}}
+		disabled={$isDisabledW}
 	>
 		<span class='content'>
 			{#if isText}
@@ -222,7 +267,7 @@
 
 		border-radius: var(--border-radius);
 
-		transition: 0.2s var(--ease-slow-slow);
+		/* transition: 0.2s var(--ease-slow-slow); */
 	}
 
 	component.unpressed {
@@ -257,7 +302,7 @@
 		transition: var(--transition);
 	}
 	
-	button:hover {
+	button.hover, button:hover {
 		background: var(--colour-hover);
 	}
 
@@ -325,3 +370,5 @@
 		position: absolute;
 	}
 </style>
+
+<svelte:options accessors />

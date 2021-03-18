@@ -1,5 +1,5 @@
 import StackTrace from 'stacktrace-js';
-import { UnexpectedValueError } from '../resources/errors';
+import { UnexpectedValueError } from '../resources/errors/unexpectedValue.error';
 import { Store } from './store';
 
 const _: any = undefined;

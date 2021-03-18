@@ -19,7 +19,6 @@ class NotJQuery {
 
 				return queryResult && $Factory.create(queryResult);
 			}
-
 			default:
 				return $Factory.create(objectToCreateFrom);
 		}
@@ -41,7 +40,7 @@ class NotJQuery {
 				return Array.from(
 					document.querySelectorAll(objectToCreateFrom),
 				).map(
-					elem => $Factory.create(elem),
+					(elem) => $Factory.create(elem),
 				);
 			default:
 				return [$Factory.create(objectToCreateFrom)];

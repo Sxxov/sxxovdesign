@@ -10,7 +10,7 @@ export class Store<T = unknown> {
 	constructor(public value: T) {}
 
 	private static neq(a: unknown, b: unknown): boolean {
-		// eslint-disable-next-line no-self-compare, eqeqeq
+		// eslint-disable-next-line no-self-compare, eqeqeq, no-negated-condition
 		return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function') as boolean;
 	}
 
@@ -30,6 +30,7 @@ export class Store<T = unknown> {
 		// store is ready
 		const runQueue = !this.subscriberQueue.length;
 
+		// eslint-disable-next-line @typescript-eslint/prefer-for-of
 		for (let i = 0; i < this.subscribers.length; i += 1) {
 			const s = this.subscribers[i];
 

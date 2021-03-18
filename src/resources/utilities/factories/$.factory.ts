@@ -138,7 +138,7 @@ export class $Factory {
 						processedValue = value as string;
 
 						// if the value string is missing a unit, add px
-						if (unitlessProperties.includes(property as string) === false) {
+						if (!unitlessProperties.includes(property as string)) {
 							processedValue = getValueWithUnit(value as string);
 						}
 
@@ -201,7 +201,7 @@ export class $Factory {
 							returnedValues[key] = returnedValue;
 						});
 
-						return returnedValues === {} ? this : returnedValues;
+						return Object.keys(returnedValues).length === 0 ? this : returnedValues;
 					default:
 						return this.style;
 				}
@@ -213,7 +213,7 @@ export class $Factory {
 				}
 
 				function getValueWithoutUnit(valueWithUnit: string): string {
-					if (valueWithUnit.includes('px') === false) {
+					if (!valueWithUnit.includes('px')) {
 						return valueWithUnit;
 					}
 
@@ -226,11 +226,11 @@ export class $Factory {
 					}
 
 					if (typeof valueWithoutUnit === 'number'
-						|| Number.isNaN(Number(valueWithoutUnit)) === false) {
+						|| !Number.isNaN(Number(valueWithoutUnit))) {
 						return `${valueWithoutUnit}px`;
 					}
 
-					return valueWithoutUnit as string;
+					return valueWithoutUnit;
 				}
 
 				function getAttributesFromValueString(

@@ -86,15 +86,15 @@ export class WindowUtility {
 		const viewportCalibrator = $(document.createElement('div'));
 
 		viewportCalibrator.css({
-			height: '1vh',
-			width: '1vw',
+			height: '100vh',
+			width: '100vw',
 			visibility: 'hidden',
 		});
 
 		document.body.appendChild(viewportCalibrator);
 
-		const height = viewportCalibrator.offsetHeight * 100;
-		const width = viewportCalibrator.offsetWidth * 100;
+		const height = viewportCalibrator.offsetHeight;
+		const width = viewportCalibrator.offsetWidth;
 
 		document.body.removeChild(viewportCalibrator);
 
@@ -119,5 +119,7 @@ export class WindowUtility {
 }
 
 if (typeof window !== String(undefined)) {
-	$(window).on('resize', () => WindowUtility.refresh());
+	$(window).on('resize', () => {
+		WindowUtility.refresh();
+	});
 }

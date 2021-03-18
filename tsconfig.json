@@ -2,11 +2,12 @@
 	"include": [
 		"src", 
 		"types", 
-		".eslintrc.js"
+		".eslintrc.js",
+		"*.config.js"
 	],
 	"compilerOptions": {
 		"module": "esnext",
-		"target": "esnext",
+		"target": "es2020",
 		"moduleResolution": "node",
 		"jsx": "preserve",
 		"baseUrl": "./",
@@ -27,5 +28,12 @@
 		"useDefineForClassFields": true,
 		"allowSyntheticDefaultImports": true,
 		"importsNotUsedAsValues": "error",
+		"typeRoots": [
+			"node_modules/@types",
+		],
+		"types": [
+			"youtube",
+			"mocha",
+		],
 	}
 }
